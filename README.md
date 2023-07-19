@@ -7,4 +7,8 @@ For access to the Demosthenes corpus, you can visit the GitHub repository at:
 
 [https://github.com/adele-project/demosthenes/tree/main](https://github.com/adele-project/demosthenes/tree/main)
 
+## Dataset Explanation
+After executing the xmlToJson.py script, each file contains a JSON file with plain text. The sentences in the JSON file are collecation of sentences as either argumentative or non-argumentative. Additionally, the annotation type indicate the Type and Scheme of each argumentative sentence. By running the create_df.py script, you can obtain two datasets: one that includes all the sentences, and another that reveals premises and conclusions along with their attributes.
+
+
 
