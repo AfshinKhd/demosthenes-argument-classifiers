@@ -1,2 +1,3 @@
 /.menv
 /.git
+/src/__pycache__/
