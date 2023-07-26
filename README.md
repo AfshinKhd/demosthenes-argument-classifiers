@@ -7,4 +7,14 @@ For access to the Demosthenes corpus, you can visit the GitHub repository at:
 
 [https://github.com/adele-project/demosthenes/tree/main](https://github.com/adele-project/demosthenes/tree/main)
 
+## Dataset Explanation
+After executing the xmlToJson.py script, each file contains a JSON file with plain text. The sentences in the JSON file are collecation of sentences as either argumentative or non-argumentative. Additionally, the annotation type indicate the Type and Scheme of each argumentative sentence. By running the create_df.py script, you can obtain two datasets: one that includes all the sentences, and another that reveals premises and conclusions along with their attributes.
+
+## Investigating Corpus
+For studying this corpus, 4 tasks have been implemented, consisting of:
+1. Argument Detection (AD): given a sentence, classify it as premise, conclusion, or neither.
+2. Argument Classification (AC): given a sentence that is known to be argumentative, classify it as premise or conclusion.
+3. Type Classification (TC): given a sentence that is known to be a premise is classified as legal(L) and/or factual (F).
+4. Scheme Classification (SC): given a sentence, known to be a legal premise, is classified according to its scheme. The Schemes include Rule, Precedent, Authoritative, Classification, Interpretative and Principle.
+
 
