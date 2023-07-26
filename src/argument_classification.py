@@ -1,7 +1,5 @@
 import warnings
 warnings.simplefilter('ignore')
-import numpy as np
-
 from tqdm import tqdm
 from sklearn import metrics
 import transformers

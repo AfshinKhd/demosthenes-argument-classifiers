@@ -4,6 +4,7 @@
 
 import torch
 from tqdm import tqdm
+import numpy as np
 from argument_classification import DistilBERTClassifier
 import os
 import pandas as pd
@@ -11,6 +12,8 @@ from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampl
 from torch import cuda
 from argument_classification import AMDataset
 from util import CfgMaper
+from sklearn.metrics import classification_report
+import logging
 
 
 class Trainer():
@@ -18,11 +21,19 @@ class Trainer():
     def __init__(self, cfg) :
         super(Trainer, self).__init__() 
 
+        logger = logging.getLogger("Trainer")
+        logger.info("Run ...")
         model = self.build_model(cfg)
         optimizer = self.build_optimizer(model)
         training_loader, testing_loader = self.build_training_loader(model)
 
-        trainer = self.trainer(model, optimizer, training_loader)
+        print("\nTraining is starting ...")
+        self.trainer(model, optimizer, training_loader)
+        print("\nEvaluation is starting ...")
+        self.final_output, self.targets = self.test(model, testing_loader)
+        print("\n Final report")
+        report = self.build_report(self.final_output, self.targets, cfg)
+        print(report)
 
     def build_model(self, cfg):
         model = DistilBERTClassifier(cfg)
@@ -48,8 +59,8 @@ class Trainer():
 
             optimizer.zero_grad()
             loss = self.loss_fn(outputs, targets)
-            if _%5000==0:
-                print(f'Epoch: {epoch}, Loss:  {loss.item()}')
+            if _%500==0 and _!= 0:
+                print(f'    Epoch: {epoch}, Loss:  {loss.item()}')
             
             loss.backward()
             optimizer.step()
@@ -67,7 +78,7 @@ class Trainer():
         # Pre-processing data and data domain
         new_df_sentences = pd.DataFrame()
         new_df_sentences['text'] = df_sentences['Text']
-        new_df_sentences['labels'] = df_sentences['Name'].apply(lambda x: self.prepare_ac_label(x))
+        new_df_sentences['labels'] = df_sentences['Name'].apply(lambda x: self.prepare_ad_label(x))
 
         # Creating the dataset and dataloader 
         train_size = 0.8
@@ -87,13 +98,42 @@ class Trainer():
 
         return training_loader,testing_loader
     
-    def prepare_ac_label(self,label):
+    def prepare_ad_label(self,label):
         if label == 'prem':
           return [1,0,0]
         elif label == 'conc':
             return [0,1,0] 
         else: 
             return [0,0, 1]
+        
+    def test(self, model, testing_loader):
+        # targets are actual label and output is predicted label
+        outputs, targets = self._validation(model, testing_loader)
+        final_outputs = (np.array(outputs) >= 0.5).astype(int)
+        #final_outputs = temp_outputs.astype(int)
+        print("output: " , final_outputs[:10])
+        print("target: ", targets[:10])
+        return final_outputs, targets
+        
+    def _validation(self, model, testing_loader):
+        model.eval()
+        fin_targets=[]
+        fin_outputs=[]
+        with torch.no_grad():
+            for _, data in tqdm(enumerate(testing_loader, 0)):
+                ids = data['ids'].to(model.device, dtype = torch.long)
+                mask = data['mask'].to(model.device, dtype = torch.long)
+                token_type_ids = data['token_type_ids'].to(model.device, dtype = torch.long)
+                targets = data['targets'].to(model.device, dtype = torch.float)
+                outputs = model(ids, mask, token_type_ids)
+                fin_targets.extend(targets.cpu().detach().numpy().tolist())
+                fin_outputs.extend(torch.sigmoid(outputs).cpu().detach().numpy().tolist())
+        return fin_outputs, fin_targets
+    
+    def build_report(self, predicated_label, actual_label, cfg):
+        report = classification_report(actual_label, predicated_label, target_names=cfg.ad_labels)
+        return report
+
 
 
 def setup():
@@ -101,11 +141,22 @@ def setup():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("device is: ", device)
 
+    model1 = {"name":"distilbert"}
+    model2 = {"name":"distilbert"}
+    models = [model1,model2]
+
+    tasks = {"Ac":1 , "AC":2 , "TC":3 , "SC":4}
+
     max_len = 128
     train_batch_size = 4
     valid_batch_size = 4
     epochs = 1
     learning_rate = 1e-05
+
+    ad_labels = ['premise','conclusion','neither']
+    ac_labels = ['premise','conclusion']
+    tc_labels = ['L','F']
+    sc_labels = ['Rule', 'Itpr', 'Prec', 'Class', 'Princ', 'Aut']
 
     train_params = {'batch_size': train_batch_size,
                     'shuffle': True,
@@ -118,14 +169,15 @@ def setup():
                     }
 
     return CfgMaper({'device':device , 'max_len':max_len, 'train_batch_size':train_batch_size, 'valid_batch_size':valid_batch_size ,
-                     'epochs':epochs, 'learning_rate':learning_rate, 'train_params':train_params, 'test_params':test_params })
+                     'epochs':epochs, 'learning_rate':learning_rate, 'train_params':train_params, 'test_params':test_params,
+                     'ad_labels':ad_labels, 'ac_labels':ac_labels, 'tc_labels':tc_labels, 'sc_labels':sc_labels ,'Model':models ,
+                      'Task':tasks })
 
 
 def main():
-    print("here")
     cfg = setup()
     trainer = Trainer(cfg)
-    trainer.build_model()
+    #report_ad = trainer.report()
 
 
 if __name__ == "__main__":
