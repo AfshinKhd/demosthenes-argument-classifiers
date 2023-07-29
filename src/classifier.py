@@ -39,7 +39,6 @@ class AMClassifier(torch.nn.Module):
             self.tokenizer = AutoTokenizer.from_pretrained(cfg.MODEL.model_id, truncation=True, do_lower_case=True, use_fast= False)
             self.l1 = DebertaV2Model.from_pretrained(cfg.MODEL.model_id)
         else:
-            print("heeeeeeeeeeeeeeeeeeeeeeeeere",cfg.MODEL.model_id)
             self.tokenizer = AutoTokenizer.from_pretrained(cfg.MODEL.model_id, truncation=True, do_lower_case=True)
             self.l1 = XLMRobertaModel.from_pretrained(cfg.MODEL.model_id)           
         # elif  cfg.MODEL.name == 'xlm-r':

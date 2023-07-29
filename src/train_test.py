@@ -14,6 +14,7 @@ from util.dataset_util import CfgMaper
 from sklearn.metrics import classification_report
 import logging
 import util.util as util
+import argparse
 
 
 class Trainer():
@@ -156,16 +157,14 @@ class Trainer():
 
 
 
-def setup():
-    #self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+def setup(config_file):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     random_state = 42
     print("device is: ", device)
-    print("\n")
 
     base_path = os.getcwd()
     configs_folder = os.path.join(os.getcwd(), "src/configs")
-    model_path = os.path.join(configs_folder, "deberta.yaml")
+    model_path = os.path.join(configs_folder, config_file)
 
     tasks = [CfgMaper({'name':'AD', 'labels':['premise','conclusion','neither']}),
              CfgMaper({'name':'AC', 'labels':['premise','conclusion']}),
@@ -180,42 +179,27 @@ def setup():
    
     return cfg
 
-def scheduler(cfg):
-    
+
+def main(config_file):
+    cfg = setup(config_file)
+
     for task in cfg.tasks:
         print("Start running ",task)
         trainer = Trainer(cfg, task)
-
-    # print("Start running AD")
-    # cfg.MODEL = CfgMaper({"name":"distilbert" , "num_output":3, "task":"AD", "task_label":cfg.ad_labels})
-    # print("cfg: ", cfg.MODEL.name)
-    # trainer = Trainer(cfg)
-
-    # print("\nStart running AC")
-    # cfg.MODEL = CfgMaper({"name":"distilbert" , "num_output":2, "task":"AC", "task_label":cfg.ac_labels})
-    # print("cfg: ", cfg.MODEL)
-    # trainer = Trainer(cfg)
-
-    # print("\nStart running AC")
-    # cfg.MODEL = CfgMaper({"name":"distilbert" , "num_output":2, "task":"TC", "task_label":cfg.tc_labels})
-    # print("cfg: ", cfg.MODEL)
-    # trainer = Trainer(cfg)
-
-    # print("\nStart running AC")
-    # cfg.MODEL = CfgMaper({"name":"distilbert" , "num_output":6, "task":"SC", "task_label":cfg.sc_labels})
-    # print("cfg: ", cfg.MODEL)
-    # trainer = Trainer(cfg)
-
-
-
-def main():
-    cfg = setup()
-    scheduler(cfg)
     
-    #report_ad = trainer.report()
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Train and Test")
+    # config arg is not mandatory
+    #parser.add_argument("--config-file", type=str,  default= "distilbert.yaml",help="Path to the YAML configuration file.")
+    parser.add_argument("--config-file", type=str,  required=True, help="Path to the YAML configuration file.")
+    return parser.parse_args()
 
 
 if __name__ == "__main__":
-    main()
+    args = parse_arguments()
+    config_file = args.config_file
+
+    main(config_file)
 
 
