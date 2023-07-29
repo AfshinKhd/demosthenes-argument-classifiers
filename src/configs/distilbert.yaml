@@ -1,20 +1,20 @@
-# YAML configuration for a Distil-Bert Model
+# YAML configuration 
 MODEL:
   name: "distilbert"  
   suffix: ""
-  num_output: 3  # Number of output for classification 
-  model_id: "xlm-roberta-base"
+  num_pre_output: 768 # Number of pre last layer output for classification 
+  model_id: "distilbert-base-uncased"
   train_size: .8
   max_len: 128
   train_batch_size: 4
   valid_batch_size: 4
-  learning_rate: 1e-05
+  learning_rate: 1.0e-05
   epochs: 1  
 
 train_params:
   batch_size: 4
-  shuffle': True
-  num_workers': 0
+  shuffle: True
+  num_workers: 0
                     
 
 test_params:
@@ -23,9 +23,3 @@ test_params:
   num_workers: 0
                     
 
-# data:
-#   data_path: "data/dataset.csv"  # Path to the dataset file
-#   num_classes: 10  # Number of classes in the dataset
-
-# evaluation:
-#   metric: "accuracy"

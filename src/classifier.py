@@ -5,7 +5,7 @@ from sklearn import metrics
 import transformers
 import torch
 from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampler
-from transformers import DistilBertTokenizer, DistilBertModel , AutoTokenizer, XLMRobertaModel 
+from transformers import DistilBertTokenizer, DistilBertModel , AutoTokenizer, XLMRobertaModel, DebertaV2Model
 import logging
 logging.basicConfig(level=logging.ERROR)
 
@@ -30,21 +30,29 @@ class AMClassifier(torch.nn.Module):
         self.train_batch_size = cfg.MODEL.train_batch_size
         self.valid_batch_size = cfg.MODEL.valid_batch_size
         self.learning_rate = cfg.MODEL.learning_rate
+        self.num_pre_output = cfg.MODEL.num_pre_output
         
         if cfg.MODEL.name == 'distilbert':
             self.tokenizer = DistilBertTokenizer.from_pretrained(cfg.MODEL.model_id, truncation=True, do_lower_case=True)
             self.l1 = DistilBertModel.from_pretrained(cfg.MODEL.model_id)
-        elif  cfg.MODEL.name == 'xlm-r':
-            self.tokenizer = AutoTokenizer.from_pretrained(cfg.MODEL.model_id, truncation=True, do_lower_case=True)
-            self.l1 = XLMRobertaModel.from_pretrained(cfg.MODEL.model_id)
+        elif cfg.MODEL.name == 'deberta':
+            self.tokenizer = AutoTokenizer.from_pretrained(cfg.MODEL.model_id, truncation=True, do_lower_case=True, use_fast= False)
+            self.l1 = DebertaV2Model.from_pretrained(cfg.MODEL.model_id)
         else:
-            print("The model couldn't be recognised!")
+            print("heeeeeeeeeeeeeeeeeeeeeeeeere",cfg.MODEL.model_id)
+            self.tokenizer = AutoTokenizer.from_pretrained(cfg.MODEL.model_id, truncation=True, do_lower_case=True)
+            self.l1 = XLMRobertaModel.from_pretrained(cfg.MODEL.model_id)           
+        # elif  cfg.MODEL.name == 'xlm-r':
+        #     self.tokenizer = AutoTokenizer.from_pretrained(cfg.MODEL.model_id, truncation=True, do_lower_case=True)
+        #     self.l1 = XLMRobertaModel.from_pretrained(cfg.MODEL.model_id)
+        # else:
+        #     print("The model couldn't be recognised!")
         
 
         # Creating customized model 
-        self.pre_classifier = torch.nn.Linear(768, 768)
+        self.pre_classifier = torch.nn.Linear(self.num_pre_output, self.num_pre_output)
         self.dropout = torch.nn.Dropout(0.1)
-        self.ac_classifier = torch.nn.Linear(768, num_outputs)
+        self.ac_classifier = torch.nn.Linear(self.num_pre_output, num_outputs)
 
     def forward(self, input_ids, attention_mask, token_type_ids):
         output_1 = self.l1(input_ids=input_ids, attention_mask=attention_mask)

@@ -75,7 +75,7 @@ class Trainer():
     def build_training_loader(self, model):
         # read data
         base_path = os.getcwd() 
-        if model.task == "AD":
+        if self.current_task.name == "AD":
             df_sentences = pd.read_pickle(base_path + "\df_sentences.pkl")
         else:
             df_annotations = pd.read_pickle(base_path + "\df_annotations.pkl")
@@ -86,14 +86,14 @@ class Trainer():
         if self.current_task.name == "AD": 
             new_df['text'] = df_sentences['Text']
             new_df['labels'] = df_sentences['Name'].apply(lambda x: dataset_util.prepare_AD_label(x))
-        elif model.task == "AC":
+        elif self.current_task.name == "AC":
             new_df['text'] = df_annotations['Text']
             new_df['labels'] = df_annotations['Name'].apply(lambda x: dataset_util.prepare_AC_label(x))
-        elif model.task == "TC":
+        elif self.current_task.name == "TC":
             df_annotations = dataset_util.preprocessing_data(df_annotations, "Type")
             new_df['text'] = df_annotations['Text']
             new_df['labels'] = df_annotations['Type'].apply(lambda x: dataset_util.prepare_TC_label(x))
-        elif model.task == "SC":
+        elif self.current_task.name == "SC":
             df_annotations = dataset_util.preprocessing_data(df_annotations, "Scheme")
             new_df['text'] = df_annotations['Text']
             new_df['labels'] = df_annotations['Scheme'].apply(lambda x: dataset_util.prepare_SC_label(x))
@@ -160,16 +160,17 @@ def setup():
     #self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     random_state = 42
-    print("device is: \n", device)
+    print("device is: ", device)
+    print("\n")
 
     base_path = os.getcwd()
     configs_folder = os.path.join(os.getcwd(), "src/configs")
-    model_path = os.path.join(configs_folder, "xlm-r-l.yaml")
+    model_path = os.path.join(configs_folder, "deberta.yaml")
 
-    tasks = [CfgMaper({'name:':'AD', 'labels':['premise','conclusion','neither']}),
-             CfgMaper({'name:':'AC', 'labels':['premise','conclusion']}),
-             CfgMaper({'name:':'TC', 'labels':['L','F']}),
-             CfgMaper({'name:':'SC', 'labels':['Rule', 'Itpr', 'Prec', 'Class', 'Princ', 'Aut']})]
+    tasks = [CfgMaper({'name':'AD', 'labels':['premise','conclusion','neither']}),
+             CfgMaper({'name':'AC', 'labels':['premise','conclusion']}),
+             CfgMaper({'name':'TC', 'labels':['L','F']}),
+             CfgMaper({'name':'SC', 'labels':['Rule', 'Itpr', 'Prec', 'Class', 'Princ', 'Aut']})]
 
     # CfgMaper gets back elements by dot(extended class of dict)
     default_cfg = CfgMaper({'device':device , 'tasks':tasks, 'random_state':random_state ,'base_path':base_path })
@@ -180,7 +181,6 @@ def setup():
     return cfg
 
 def scheduler(cfg):
-    # xlm-roberta-large
     
     for task in cfg.tasks:
         print("Start running ",task)

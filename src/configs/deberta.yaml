@@ -1,9 +1,9 @@
 # YAML configuration 
 MODEL:
-  name: "xlm-r"  
-  suffix: "large"
-  num_pre_output: 1024  # Number of pre last layer output for classification 
-  model_id: "xlm-roberta-large"
+  name: "deberta"  
+  suffix: "v2-xlarge"
+  num_pre_output: 1536 # Number of pre last layer output for classification 
+  model_id: "microsoft/deberta-v2-xlarge"
   train_size: .8
   max_len: 128
   train_batch_size: 4

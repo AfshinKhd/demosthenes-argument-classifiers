@@ -1,9 +1,9 @@
 # YAML configuration 
 MODEL:
-  name: "xlm-r"  
-  suffix: "large"
-  num_pre_output: 1024  # Number of pre last layer output for classification 
-  model_id: "xlm-roberta-large"
+  name: "mini-lm"  
+  suffix: ""
+  num_pre_output: 384  # Number of pre last layer output for classification 
+  model_id: "sentence-transformers/all-MiniLM-L12-v2"
   train_size: .8
   max_len: 128
   train_batch_size: 4
@@ -21,5 +21,3 @@ test_params:
   batch_size: 4
   shuffle: True
   num_workers: 0
-                    
-
