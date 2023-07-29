@@ -5,7 +5,7 @@ from sklearn import metrics
 import transformers
 import torch
 from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampler
-from transformers import DistilBertTokenizer, DistilBertModel
+from transformers import DistilBertTokenizer, DistilBertModel , AutoTokenizer, XLMRobertaModel 
 import logging
 logging.basicConfig(level=logging.ERROR)
 
@@ -13,32 +13,38 @@ logging.basicConfig(level=logging.ERROR)
 
 
 
-class DistilBERTClassifier(torch.nn.Module):
+class AMClassifier(torch.nn.Module):
 
-    def __init__(self,cfg) :
-        super(DistilBERTClassifier, self).__init__()
-
+    def __init__(self, cfg, num_outputs) :
+        super(AMClassifier, self).__init__()
     
         self.device = cfg.device
         self.random_state = cfg.random_state
         self.train_params= cfg.train_params
         self.test_params = cfg.test_params
-        self.epochs = cfg.epochs
-        self.task = cfg.MODEL.task
+        self.epochs = cfg.MODEL.epochs
 
         # Sections of config
-        self.train_size = cfg.train_size
-        self.max_len = cfg.max_len
-        self.train_batch_size = cfg.train_batch_size
-        self.valid_batch_size = cfg.valid_batch_size
-        self.learning_rate = cfg.learning_rate
-        self.tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased', truncation=True, do_lower_case=True)
+        self.train_size = cfg.MODEL.train_size
+        self.max_len = cfg.MODEL.max_len
+        self.train_batch_size = cfg.MODEL.train_batch_size
+        self.valid_batch_size = cfg.MODEL.valid_batch_size
+        self.learning_rate = cfg.MODEL.learning_rate
+        
+        if cfg.MODEL.name == 'distilbert':
+            self.tokenizer = DistilBertTokenizer.from_pretrained(cfg.MODEL.model_id, truncation=True, do_lower_case=True)
+            self.l1 = DistilBertModel.from_pretrained(cfg.MODEL.model_id)
+        elif  cfg.MODEL.name == 'xlm-r':
+            self.tokenizer = AutoTokenizer.from_pretrained(cfg.MODEL.model_id, truncation=True, do_lower_case=True)
+            self.l1 = XLMRobertaModel.from_pretrained(cfg.MODEL.model_id)
+        else:
+            print("The model couldn't be recognised!")
+        
 
         # Creating customized model 
-        self.l1 = DistilBertModel.from_pretrained("distilbert-base-uncased")
         self.pre_classifier = torch.nn.Linear(768, 768)
         self.dropout = torch.nn.Dropout(0.1)
-        self.ac_classifier = torch.nn.Linear(768, cfg.MODEL.num_output)
+        self.ac_classifier = torch.nn.Linear(768, num_outputs)
 
     def forward(self, input_ids, attention_mask, token_type_ids):
         output_1 = self.l1(input_ids=input_ids, attention_mask=attention_mask)

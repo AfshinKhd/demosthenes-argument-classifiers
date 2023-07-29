@@ -5,25 +5,26 @@
 import torch
 from tqdm import tqdm
 import numpy as np
-from classifier import DistilBERTClassifier
 import os
 import pandas as pd
-from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampler
-from classifier import AMDataset
-import dataset_util
-from dataset_util import CfgMaper
+from torch.utils.data import  DataLoader
+from classifier import AMDataset, AMClassifier
+import util.dataset_util as dataset_util
+from util.dataset_util import CfgMaper
 from sklearn.metrics import classification_report
 import logging
+import util.util as util
 
 
 class Trainer():
 
-    def __init__(self, cfg) :
+    def __init__(self, cfg, task) :
         super(Trainer, self).__init__() 
 
+        self.current_task = task
         logger = logging.getLogger("Trainer")
         logger.info("Run ...")
-        model = self.build_model(cfg)
+        model = self.build_model(cfg, len(task.labels))
         optimizer = self.build_optimizer(model)
         training_loader, testing_loader = self.build_training_loader(model)
 
@@ -35,13 +36,9 @@ class Trainer():
         report = self.build_report(self.final_output, self.targets, cfg)
         print(report)
 
-    def build_model(self, cfg):
-        if cfg.MODEL.name == "distilbert":
-            model = DistilBERTClassifier(cfg)
-        elif cfg.MODEL.name == "":
-            model = DistilBERTClassifier(cfg)
-        else:
-            print("Model in cfg couldn't be found")
+    def build_model(self, cfg, num_outputs):
+
+        model = AMClassifier(cfg, num_outputs)
 
         model.to(model.device)
         print(model)
@@ -86,7 +83,7 @@ class Trainer():
 
         # Pre-processing data and data domain
         new_df = pd.DataFrame()
-        if model.task == "AD": 
+        if self.current_task.name == "AD": 
             new_df['text'] = df_sentences['Text']
             new_df['labels'] = df_sentences['Name'].apply(lambda x: dataset_util.prepare_AD_label(x))
         elif model.task == "AC":
@@ -154,7 +151,7 @@ class Trainer():
         return fin_outputs, fin_targets
     
     def build_report(self, predicated_label, actual_label, cfg):
-        report = classification_report(actual_label, predicated_label, target_names=cfg.MODEL.task_label)
+        report = classification_report(actual_label, predicated_label, target_names=self.current_task.labels)
         return report
 
 
@@ -165,57 +162,49 @@ def setup():
     random_state = 42
     print("device is: \n", device)
 
-    train_size = .8
-    max_len = 128
-    train_batch_size = 4
-    valid_batch_size = 4
-    epochs = 1
-    learning_rate = 1e-05
+    base_path = os.getcwd()
+    configs_folder = os.path.join(os.getcwd(), "src/configs")
+    model_path = os.path.join(configs_folder, "xlm-r-l.yaml")
 
-    ad_labels = ['premise','conclusion','neither']
-    ac_labels = ['premise','conclusion']
-    tc_labels = ['L','F']
-    sc_labels = ['Rule', 'Itpr', 'Prec', 'Class', 'Princ', 'Aut']
+    tasks = [CfgMaper({'name:':'AD', 'labels':['premise','conclusion','neither']}),
+             CfgMaper({'name:':'AC', 'labels':['premise','conclusion']}),
+             CfgMaper({'name:':'TC', 'labels':['L','F']}),
+             CfgMaper({'name:':'SC', 'labels':['Rule', 'Itpr', 'Prec', 'Class', 'Princ', 'Aut']})]
 
-    train_params = {'batch_size': train_batch_size,
-                    'shuffle': True,
-                    'num_workers': 0
-                    }
-
-    test_params = {'batch_size': valid_batch_size,
-                    'shuffle': True,
-                    'num_workers': 0
-                    }
+    # CfgMaper gets back elements by dot(extended class of dict)
+    default_cfg = CfgMaper({'device':device , 'tasks':tasks, 'random_state':random_state ,'base_path':base_path })
+                    
     
-    default_model = CfgMaper({"name":"distilbert" , "num_output":3, "task":"AD", "task_label":ad_labels})
-
-    # CfgMaper gets back element by dot(extended class of dict)
-    return CfgMaper({'device':device , 'train_size':train_size, 'max_len':max_len, 'train_batch_size':train_batch_size, 'valid_batch_size':valid_batch_size ,
-                     'epochs':epochs, 'learning_rate':learning_rate, 'train_params':train_params, 'test_params':test_params,
-                     'ad_labels':ad_labels, 'ac_labels':ac_labels, 'tc_labels':tc_labels, 'sc_labels':sc_labels ,'MODEL':default_model ,
-                      'random_state':random_state })
+    cfg = default_cfg.merge_file(util.load_conf(model_path))
+   
+    return cfg
 
 def scheduler(cfg):
+    # xlm-roberta-large
+    
+    for task in cfg.tasks:
+        print("Start running ",task)
+        trainer = Trainer(cfg, task)
 
-    print("Start running AD")
-    cfg.MODEL = CfgMaper({"name":"distilbert" , "num_output":3, "task":"AD", "task_label":cfg.ad_labels})
-    print("cfg: ", cfg.MODEL.name)
-    trainer = Trainer(cfg)
+    # print("Start running AD")
+    # cfg.MODEL = CfgMaper({"name":"distilbert" , "num_output":3, "task":"AD", "task_label":cfg.ad_labels})
+    # print("cfg: ", cfg.MODEL.name)
+    # trainer = Trainer(cfg)
 
-    print("\nStart running AC")
-    cfg.MODEL = CfgMaper({"name":"distilbert" , "num_output":2, "task":"AC", "task_label":cfg.ac_labels})
-    print("cfg: ", cfg.MODEL)
-    trainer = Trainer(cfg)
+    # print("\nStart running AC")
+    # cfg.MODEL = CfgMaper({"name":"distilbert" , "num_output":2, "task":"AC", "task_label":cfg.ac_labels})
+    # print("cfg: ", cfg.MODEL)
+    # trainer = Trainer(cfg)
 
-    print("\nStart running AC")
-    cfg.MODEL = CfgMaper({"name":"distilbert" , "num_output":2, "task":"TC", "task_label":cfg.tc_labels})
-    print("cfg: ", cfg.MODEL)
-    trainer = Trainer(cfg)
+    # print("\nStart running AC")
+    # cfg.MODEL = CfgMaper({"name":"distilbert" , "num_output":2, "task":"TC", "task_label":cfg.tc_labels})
+    # print("cfg: ", cfg.MODEL)
+    # trainer = Trainer(cfg)
 
-    print("\nStart running AC")
-    cfg.MODEL = CfgMaper({"name":"distilbert" , "num_output":6, "task":"SC", "task_label":cfg.sc_labels})
-    print("cfg: ", cfg.MODEL)
-    trainer = Trainer(cfg)
+    # print("\nStart running AC")
+    # cfg.MODEL = CfgMaper({"name":"distilbert" , "num_output":6, "task":"SC", "task_label":cfg.sc_labels})
+    # print("cfg: ", cfg.MODEL)
+    # trainer = Trainer(cfg)
 
 
 

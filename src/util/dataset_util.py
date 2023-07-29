@@ -30,6 +30,14 @@ class CfgMaper(dict):
         super(CfgMaper, self).__delitem__(key)
         del self.__dict__[key]
 
+    def merge_file(self, new_conf) :
+        merged = CfgMaper({**self.__dict__, **new_conf})
+        # Convet Model in yaml script to CfgMaper 
+        merged.MODEL = CfgMaper(merged.MODEL)
+        return merged
+       
+
+
 
 
 def preprocessing_data(df, label_name):
