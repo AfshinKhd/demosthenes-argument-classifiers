@@ -18,10 +18,11 @@ For studying this corpus, 4 tasks have been implemented, consisting of:
 4. Scheme Classification (SC): given a sentence, known to be a legal premise, is classified according to its scheme. The Schemes include Rule, Precedent, Authoritative, Classification, Interpretative and Principle.
 
 ## Evaluation Result
-In Studying *Argument Detection(AD) the results is follow:
+In Studying *Argument Mining, following result are achieved:
+###1. Argument Detection(AD)
 
-| Model      | Metric    | Premise | Conclusion | Neither |
-|------------|-----------|---------|------------|---------|
+| Model       | Metric    | Premise | Conclusion | Neither |
+|-------------|-----------|---------|------------|---------|
 | Distilbert  | Precision | 0.70    | 0.70       | 0       |
 | Distilbert  | Recall    | 0.70    | 0.70       | 0       |
 | Distilbert  | f1-score  | 0.70    | 0.70       | 0       |
@@ -32,5 +33,45 @@ In Studying *Argument Detection(AD) the results is follow:
 | xlm-roberta | Recall    | 0.70    | 0.70       | 0       |
 | xlm-roberta | f1-score  | 0.70    | 0.70       | 0       |
 
+2.* Argument Classification(AC)
 
+| Model       | Metric    | Premise | Conclusion |
+|-------------|-----------|---------|------------|
+| Distilbert  | Precision | 0.70    | 0.70       |
+| Distilbert  | Recall    | 0.70    | 0.70       |
+| Distilbert  | f1-score  | 0.70    | 0.70       |
+| Mini-lm     | Precision | 0.70    | 0.70       |
+| Mini-lm     | Recall    | 0.70    | 0.70       |
+| Mini-lm     | f1-score  | 0.70    | 0.70       |
+| xlm-roberta | Precision | 0.70    | 0.70       |
+| xlm-roberta | Recall    | 0.70    | 0.70       |
+| xlm-roberta | f1-score  | 0.70    | 0.70       |
+
+3.*Type Classification(TC)
+
+| Model       | Metric    | Fact  | Logic |
+|-------------|-----------|-------|-------|
+| Distilbert  | Precision | 0.70  | 0.70  |
+| Distilbert  | Recall    | 0.70  | 0.70  |
+| Distilbert  | f1-score  | 0.70  | 0.70  |
+| Mini-lm     | Precision | 0.70  | 0.70  |
+| Mini-lm     | Recall    | 0.70  | 0.70  |
+| Mini-lm     | f1-score  | 0.70  | 0.70  |
+| xlm-roberta | Precision | 0.70  | 0.70  |
+| xlm-roberta | Recall    | 0.70  | 0.70  |
+| xlm-roberta | f1-score  | 0.70  | 0.70  |
+
+4. Scheme Classification(SC)
+
+| Model       | Metric    | Rule | Itpr | Prec | Class | Princ | Aut |
+|-------------|-----------|------|------|------|-------|-------|-----|
+| Distilbert  | Precision | 0    | 0    | 0.70 | 0     | 0     | 0   |
+| Distilbert  | Recall    | 0    | 0    | 0.70 | 0     | 0     | 0   |
+| Distilbert  | f1-score  | 0    | 0    | 0.70 | 0     | 0     | 0   |
+| Mini-lm     | Precision | 0    | 0    | 0.70 | 0     | 0     | 0   |
+| Mini-lm     | Recall    | 0    | 0    | 0.70 | 0     | 0     | 0   |
+| Mini-lm     | f1-score  | 0    | 0    | 0.70 | 0     | 0     | 0   |
+| xlm-roberta | Precision | 0    | 0    | 0.70 | 0     | 0     | 0   |
+| xlm-roberta | Recall    | 0    | 0    | 0.70 | 0     | 0     | 0   |
+| xlm-roberta | f1-score  | 0    | 0    | 0.70 | 0     | 0     | 0   |
 
