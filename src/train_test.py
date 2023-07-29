@@ -5,13 +5,13 @@
 import torch
 from tqdm import tqdm
 import numpy as np
-from argument_classification import DistilBERTClassifier
+from classifier import DistilBERTClassifier
 import os
 import pandas as pd
 from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampler
-from torch import cuda
-from argument_classification import AMDataset
-from util import CfgMaper
+from classifier import AMDataset
+import dataset_util
+from dataset_util import CfgMaper
 from sklearn.metrics import classification_report
 import logging
 
@@ -36,7 +36,13 @@ class Trainer():
         print(report)
 
     def build_model(self, cfg):
-        model = DistilBERTClassifier(cfg)
+        if cfg.MODEL.name == "distilbert":
+            model = DistilBERTClassifier(cfg)
+        elif cfg.MODEL.name == "":
+            model = DistilBERTClassifier(cfg)
+        else:
+            print("Model in cfg couldn't be found")
+
         model.to(model.device)
         print(model)
         return model
@@ -72,23 +78,46 @@ class Trainer():
     def build_training_loader(self, model):
         # read data
         base_path = os.getcwd() 
-        df_sentences = pd.read_pickle(base_path + "\df_sentences.pkl")
-        df_annotations = pd.read_pickle(base_path + "\df_annotations.pkl")
+        if model.task == "AD":
+            df_sentences = pd.read_pickle(base_path + "\df_sentences.pkl")
+        else:
+            df_annotations = pd.read_pickle(base_path + "\df_annotations.pkl")
+        
 
         # Pre-processing data and data domain
-        new_df_sentences = pd.DataFrame()
-        new_df_sentences['text'] = df_sentences['Text']
-        new_df_sentences['labels'] = df_sentences['Name'].apply(lambda x: self.prepare_ad_label(x))
+        new_df = pd.DataFrame()
+        if model.task == "AD": 
+            new_df['text'] = df_sentences['Text']
+            new_df['labels'] = df_sentences['Name'].apply(lambda x: dataset_util.prepare_AD_label(x))
+        elif model.task == "AC":
+            new_df['text'] = df_annotations['Text']
+            new_df['labels'] = df_annotations['Name'].apply(lambda x: dataset_util.prepare_AC_label(x))
+        elif model.task == "TC":
+            df_annotations = dataset_util.preprocessing_data(df_annotations, "Type")
+            new_df['text'] = df_annotations['Text']
+            new_df['labels'] = df_annotations['Type'].apply(lambda x: dataset_util.prepare_TC_label(x))
+        elif model.task == "SC":
+            df_annotations = dataset_util.preprocessing_data(df_annotations, "Scheme")
+            new_df['text'] = df_annotations['Text']
+            new_df['labels'] = df_annotations['Scheme'].apply(lambda x: dataset_util.prepare_SC_label(x))
+        else:
+            print("Model Type couldn't be recognised!")
+        
 
         # Creating the dataset and dataloader 
-        train_size = 0.8
-        self.train_data=new_df_sentences.sample(frac=train_size,random_state=200)
-        self.test_data=new_df_sentences.drop(self.train_data.index).reset_index(drop=True)
+        train_size = model.train_size
+        self.train_data=new_df.sample(frac=train_size,random_state=model.random_state)
+        self.test_data=new_df.drop(self.train_data.index).reset_index(drop=True)
         self.train_data = self.train_data.reset_index(drop=True)
 
-        print("FULL Dataset: {}".format(new_df_sentences.shape))
+        print("FULL Dataset: {}".format(new_df.shape))
         print("TRAIN Dataset: {}".format(self.train_data.shape))
         print("TEST Dataset: {}".format(self.test_data.shape))
+
+
+        # result = self.test_data['labels'].apply(lambda x: x == [1,0,0,0,0,0])
+
+        # print(result.sum())
 
         self.training_set = AMDataset(self.train_data, model.tokenizer, model.max_len)
         self.testing_set = AMDataset(self.test_data, model.tokenizer, model.max_len)
@@ -98,13 +127,7 @@ class Trainer():
 
         return training_loader,testing_loader
     
-    def prepare_ad_label(self,label):
-        if label == 'prem':
-          return [1,0,0]
-        elif label == 'conc':
-            return [0,1,0] 
-        else: 
-            return [0,0, 1]
+
         
     def test(self, model, testing_loader):
         # targets are actual label and output is predicted label
@@ -131,7 +154,7 @@ class Trainer():
         return fin_outputs, fin_targets
     
     def build_report(self, predicated_label, actual_label, cfg):
-        report = classification_report(actual_label, predicated_label, target_names=cfg.ad_labels)
+        report = classification_report(actual_label, predicated_label, target_names=cfg.MODEL.task_label)
         return report
 
 
@@ -139,14 +162,10 @@ class Trainer():
 def setup():
     #self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print("device is: ", device)
+    random_state = 42
+    print("device is: \n", device)
 
-    model1 = {"name":"distilbert"}
-    model2 = {"name":"distilbert"}
-    models = [model1,model2]
-
-    tasks = {"Ac":1 , "AC":2 , "TC":3 , "SC":4}
-
+    train_size = .8
     max_len = 128
     train_batch_size = 4
     valid_batch_size = 4
@@ -167,16 +186,43 @@ def setup():
                     'shuffle': True,
                     'num_workers': 0
                     }
+    
+    default_model = CfgMaper({"name":"distilbert" , "num_output":3, "task":"AD", "task_label":ad_labels})
 
-    return CfgMaper({'device':device , 'max_len':max_len, 'train_batch_size':train_batch_size, 'valid_batch_size':valid_batch_size ,
+    # CfgMaper gets back element by dot(extended class of dict)
+    return CfgMaper({'device':device , 'train_size':train_size, 'max_len':max_len, 'train_batch_size':train_batch_size, 'valid_batch_size':valid_batch_size ,
                      'epochs':epochs, 'learning_rate':learning_rate, 'train_params':train_params, 'test_params':test_params,
-                     'ad_labels':ad_labels, 'ac_labels':ac_labels, 'tc_labels':tc_labels, 'sc_labels':sc_labels ,'Model':models ,
-                      'Task':tasks })
+                     'ad_labels':ad_labels, 'ac_labels':ac_labels, 'tc_labels':tc_labels, 'sc_labels':sc_labels ,'MODEL':default_model ,
+                      'random_state':random_state })
+
+def scheduler(cfg):
+
+    print("Start running AD")
+    cfg.MODEL = CfgMaper({"name":"distilbert" , "num_output":3, "task":"AD", "task_label":cfg.ad_labels})
+    print("cfg: ", cfg.MODEL.name)
+    trainer = Trainer(cfg)
+
+    print("\nStart running AC")
+    cfg.MODEL = CfgMaper({"name":"distilbert" , "num_output":2, "task":"AC", "task_label":cfg.ac_labels})
+    print("cfg: ", cfg.MODEL)
+    trainer = Trainer(cfg)
+
+    print("\nStart running AC")
+    cfg.MODEL = CfgMaper({"name":"distilbert" , "num_output":2, "task":"TC", "task_label":cfg.tc_labels})
+    print("cfg: ", cfg.MODEL)
+    trainer = Trainer(cfg)
+
+    print("\nStart running AC")
+    cfg.MODEL = CfgMaper({"name":"distilbert" , "num_output":6, "task":"SC", "task_label":cfg.sc_labels})
+    print("cfg: ", cfg.MODEL)
+    trainer = Trainer(cfg)
+
 
 
 def main():
     cfg = setup()
-    trainer = Trainer(cfg)
+    scheduler(cfg)
+    
     #report_ad = trainer.report()
 
 

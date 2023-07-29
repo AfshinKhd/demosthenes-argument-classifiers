@@ -20,16 +20,14 @@ class DistilBERTClassifier(torch.nn.Module):
 
     
         self.device = cfg.device
+        self.random_state = cfg.random_state
         self.train_params= cfg.train_params
         self.test_params = cfg.test_params
         self.epochs = cfg.epochs
-
-        self.AD_labels = ['prem','conc','void']
-        self.AC_labels = ['premise','conc']
-        self.TC_labels = ['L','F']
-        self.SC_labels = ['Rule', 'Itpr', 'Prec', 'Class', 'Princ', 'Aut']
+        self.task = cfg.MODEL.task
 
         # Sections of config
+        self.train_size = cfg.train_size
         self.max_len = cfg.max_len
         self.train_batch_size = cfg.train_batch_size
         self.valid_batch_size = cfg.valid_batch_size
@@ -40,7 +38,7 @@ class DistilBERTClassifier(torch.nn.Module):
         self.l1 = DistilBertModel.from_pretrained("distilbert-base-uncased")
         self.pre_classifier = torch.nn.Linear(768, 768)
         self.dropout = torch.nn.Dropout(0.1)
-        self.ac_classifier = torch.nn.Linear(768, 3)
+        self.ac_classifier = torch.nn.Linear(768, cfg.MODEL.num_output)
 
     def forward(self, input_ids, attention_mask, token_type_ids):
         output_1 = self.l1(input_ids=input_ids, attention_mask=attention_mask)
