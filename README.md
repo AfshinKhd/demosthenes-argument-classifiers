@@ -17,4 +17,20 @@ For studying this corpus, 4 tasks have been implemented, consisting of:
 3. Type Classification (TC): given a sentence that is known to be a premise is classified as legal(L) and/or factual (F).
 4. Scheme Classification (SC): given a sentence, known to be a legal premise, is classified according to its scheme. The Schemes include Rule, Precedent, Authoritative, Classification, Interpretative and Principle.
 
+## Evaluation Result
+In Studying *Argument Detection(AD) the results is follow:
+
+| Model      | Metric    | Premise | Conclusion | Neither |
+|------------|-----------|---------|------------|---------|
+| Distilbert  | Precision | 0.70    | 0.70       | 0       |
+| Distilbert  | Recall    | 0.70    | 0.70       | 0       |
+| Distilbert  | f1-score  | 0.70    | 0.70       | 0       |
+| Mini-lm     | Precision | 0.70    | 0.70       | 0       |
+| Mini-lm     | Recall    | 0.70    | 0.70       | 0       |
+| Mini-lm     | f1-score  | 0.70    | 0.70       | 0       |
+| xlm-roberta | Precision | 0.70    | 0.70       | 0       |
+| xlm-roberta | Recall    | 0.70    | 0.70       | 0       |
+| xlm-roberta | f1-score  | 0.70    | 0.70       | 0       |
+
+
 
