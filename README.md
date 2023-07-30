@@ -19,13 +19,13 @@ For studying this corpus, 4 tasks have been implemented, consisting of:
 
 ## Evaluation Result
 In Studying *Argument Mining, following result are achieved:
-###1. Argument Detection(AD)
+1. Argument Detection(AD)
 
 | Model       | Metric    | Premise | Conclusion | Neither |
 |-------------|-----------|---------|------------|---------|
-| Distilbert  | Precision | 0.70    | 0.70       | 0       |
-| Distilbert  | Recall    | 0.70    | 0.70       | 0       |
-| Distilbert  | f1-score  | 0.70    | 0.70       | 0       |
+| Distilbert  | Precision | 0.75    | 0.63       | 0.91    |
+| Distilbert  | Recall    | 0.73    | 0.79       | 0.91    |
+| Distilbert  | f1-score  | 0.74    | 0.70       | 0.91    |
 | Mini-lm     | Precision | 0.70    | 0.70       | 0       |
 | Mini-lm     | Recall    | 0.70    | 0.70       | 0       |
 | Mini-lm     | f1-score  | 0.70    | 0.70       | 0       |
@@ -33,13 +33,13 @@ In Studying *Argument Mining, following result are achieved:
 | xlm-roberta | Recall    | 0.70    | 0.70       | 0       |
 | xlm-roberta | f1-score  | 0.70    | 0.70       | 0       |
 
-2.* Argument Classification(AC)
+2. Argument Classification(AC)
 
 | Model       | Metric    | Premise | Conclusion |
 |-------------|-----------|---------|------------|
-| Distilbert  | Precision | 0.70    | 0.70       |
-| Distilbert  | Recall    | 0.70    | 0.70       |
-| Distilbert  | f1-score  | 0.70    | 0.70       |
+| Distilbert  | Precision | 0.98    | 0.77       |
+| Distilbert  | Recall    | 0.99    | 0.65       |
+| Distilbert  | f1-score  | 0.99    | 0.71       |
 | Mini-lm     | Precision | 0.70    | 0.70       |
 | Mini-lm     | Recall    | 0.70    | 0.70       |
 | Mini-lm     | f1-score  | 0.70    | 0.70       |
@@ -51,9 +51,9 @@ In Studying *Argument Mining, following result are achieved:
 
 | Model       | Metric    | Fact  | Logic |
 |-------------|-----------|-------|-------|
-| Distilbert  | Precision | 0.70  | 0.70  |
-| Distilbert  | Recall    | 0.70  | 0.70  |
-| Distilbert  | f1-score  | 0.70  | 0.70  |
+| Distilbert  | Precision | 0.85  | 0.90  |
+| Distilbert  | Recall    | 0.94  | 0.75  |
+| Distilbert  | f1-score  | 0.89  | 0.81  |
 | Mini-lm     | Precision | 0.70  | 0.70  |
 | Mini-lm     | Recall    | 0.70  | 0.70  |
 | Mini-lm     | f1-score  | 0.70  | 0.70  |
@@ -63,11 +63,11 @@ In Studying *Argument Mining, following result are achieved:
 
 4. Scheme Classification(SC)
 
-| Model       | Metric    | Rule | Itpr | Prec | Class | Princ | Aut |
-|-------------|-----------|------|------|------|-------|-------|-----|
-| Distilbert  | Precision | 0    | 0    | 0.70 | 0     | 0     | 0   |
-| Distilbert  | Recall    | 0    | 0    | 0.70 | 0     | 0     | 0   |
-| Distilbert  | f1-score  | 0    | 0    | 0.70 | 0     | 0     | 0   |
+| Model       | Metric    | Rule | Itpr | Prec | Class | Princ | Aut  |
+|-------------|-----------|------|------|------|-------|-------|------|
+| Distilbert  | Precision | 0.57 | 0.87 | 0.67 | 1.00  | 0     | 0.64 |
+| Distilbert  | Recall    | 0.54 | 0.41 | 0.90 | 0.33  | 0     | 0.64 |
+| Distilbert  | f1-score  | 0.55 | 0.56 | 0.77 | 0.50  | 0     | 0.64 |
 | Mini-lm     | Precision | 0    | 0    | 0.70 | 0     | 0     | 0   |
 | Mini-lm     | Recall    | 0    | 0    | 0.70 | 0     | 0     | 0   |
 | Mini-lm     | f1-score  | 0    | 0    | 0.70 | 0     | 0     | 0   |
