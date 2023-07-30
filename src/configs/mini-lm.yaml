@@ -9,7 +9,7 @@ MODEL:
   train_batch_size: 4
   valid_batch_size: 4
   learning_rate: 1.0e-05
-  epochs: 3
+  epochs: 6
 
 train_params:
   batch_size: 4

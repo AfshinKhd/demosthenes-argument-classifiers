@@ -8,12 +8,12 @@ import numpy as np
 import os
 import pandas as pd
 from torch.utils.data import  DataLoader
-from classifier import AMDataset, AMClassifier
-import util.dataset_util as dataset_util
-from util.dataset_util import CfgMaper
+from src.classifier import AMDataset, AMClassifier
+import src.util.dataset_util as dataset_util
+from src.util.dataset_util import CfgMaper
 from sklearn.metrics import classification_report
 import logging
-import util.util as util
+import src.util.util as util
 import argparse
 
 
@@ -132,8 +132,8 @@ class Trainer():
         outputs, targets = self._validation(model, testing_loader)
         final_outputs = (np.array(outputs) >= 0.5).astype(int)
         #final_outputs = temp_outputs.astype(int)
-        print("output: " , final_outputs[:10])
-        print("target: ", targets[:10])
+        #print("output: " , final_outputs[:10])
+        #print("target: ", targets[:10])
         return final_outputs, targets
         
     def _validation(self, model, testing_loader):
@@ -174,7 +174,6 @@ def setup(config_file):
     # CfgMaper gets back elements by dot(extended class of dict)
     default_cfg = CfgMaper({'device':device , 'tasks':tasks, 'random_state':random_state ,'base_path':base_path })
                     
-    
     cfg = default_cfg.merge_file(util.load_conf(model_path))
    
     return cfg
