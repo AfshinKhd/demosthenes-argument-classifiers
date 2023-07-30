@@ -17,6 +17,21 @@ For studying this corpus, 4 tasks have been implemented, consisting of:
 3. Type Classification (TC): given a sentence that is known to be a premise is classified as legal(L) and/or factual (F).
 4. Scheme Classification (SC): given a sentence, known to be a legal premise, is classified according to its scheme. The Schemes include Rule, Precedent, Authoritative, Classification, Interpretative and Principle.
 
+## Get started
+To get started with project, follow these simple steps:
+
+1. **Install Requirements:**
+
+   Make sure you have set up a virtual environment and activate it. Then, install the project dependencies listed in the `requirment.txt` file using the following command:
+
+   ```bash
+   pip install -r requirment.txt
+2. ** Run the Project:**
+
+To run the project, use the train_net.py script and specify the configuration file using the --config-file flag. For example:
+   ```bash
+   python train_net.py --config-file distilbert.yaml
+
 ## Evaluation Result
 In Studying *Argument Mining, following result are achieved:
 1. Argument Detection(AD)
