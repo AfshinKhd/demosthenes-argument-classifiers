@@ -41,9 +41,9 @@ In Studying *Argument Mining, following result are achieved:
 | Distilbert  | Precision | 0.75    | 0.63       | 0.91    | 0.86      | 0.76      |
 | Distilbert  | Recall    | 0.73    | 0.79       | 0.91    | 0.86      | 0.76      |
 | Distilbert  | f1-score  | 0.74    | 0.70       | 0.91    | 0.86      | 0.78      |
-| Mini-lm     | Precision | 0.70    | 0.70       | 0       |           |           |
-| Mini-lm     | Recall    | 0.70    | 0.70       | 0       |           |           |
-| Mini-lm     | f1-score  | 0.70    | 0.70       | 0       |           |           |
+| Mini-lm     | Precision | 0.70    | 0.62       | 0.91    | 0.85      | 0.74      |
+| Mini-lm     | Recall    | 0.74    | 0.75       | 0.88    | 0.84      | 0.79      |
+| Mini-lm     | f1-score  | 0.72    | 0.68       | 0.90    | 0.85      | 0.76      |
 | xlm-roberta | Precision | 0.70    | 0.70       | 0       |           |           |
 | xlm-roberta | Recall    | 0.70    | 0.70       | 0       |           |           |
 | xlm-roberta | f1-score  | 0.70    | 0.70       | 0       |           |           |
@@ -56,9 +56,9 @@ In Studying *Argument Mining, following result are achieved:
 | Distilbert  | Precision | 0.98    | 0.77       | 0.97      | 0.88      |
 | Distilbert  | Recall    | 0.99    | 0.65       | 0.97      | 0.82      |
 | Distilbert  | f1-score  | 0.99    | 0.71       | 0.97      | 0.85      |
-| Mini-lm     | Precision | 0.70    | 0.70       |           |           |
-| Mini-lm     | Recall    | 0.70    | 0.70       |           |           |
-| Mini-lm     | f1-score  | 0.70    | 0.70       |           |           |
+| Mini-lm     | Precision | 0.98    | 0.81       | 0.97      | 0.90      |
+| Mini-lm     | Recall    | 0.99    | 0.65       | 0.97      | 0.90      |
+| Mini-lm     | f1-score  | 0.99    | 0.72       | 0.97      | 0.85      |
 | xlm-roberta | Precision | 0.70    | 0.70       |           |           |
 | xlm-roberta | Recall    | 0.70    | 0.70       |           |           |
 | xlm-roberta | f1-score  | 0.70    | 0.70       |           |           |
@@ -71,9 +71,9 @@ In Studying *Argument Mining, following result are achieved:
 | Distilbert  | Precision | 0.85  | 0.90  | 0.86      | 0.87      |
 | Distilbert  | Recall    | 0.94  | 0.75  | 0.86      | 0.84      |
 | Distilbert  | f1-score  | 0.89  | 0.81  | 0.86      | 0.85      |
-| Mini-lm     | Precision | 0.70  | 0.70  |           |           |
-| Mini-lm     | Recall    | 0.70  | 0.70  |           |           |
-| Mini-lm     | f1-score  | 0.70  | 0.70  |           |           |
+| Mini-lm     | Precision | 0.83  | 0.90  | 0.85      | 0.87      |
+| Mini-lm     | Recall    | 0.95  | 0.71  | 0.85      | 0.83      |
+| Mini-lm     | f1-score  | 0.80  | 0.89  | 0.85      | 0.84      |
 | xlm-roberta | Precision | 0.70  | 0.70  |           |           |
 | xlm-roberta | Recall    | 0.70  | 0.70  |           |           |
 | xlm-roberta | f1-score  | 0.70  | 0.70  |           |           |
@@ -87,9 +87,9 @@ In Studying *Argument Mining, following result are achieved:
 | Distilbert  | Precision | 0.57 | 0.87 | 0.67 | 1.00  | 0     | 0.64 | 0.67      | 0.62      |
 | Distilbert  | Recall    | 0.54 | 0.41 | 0.90 | 0.33  | 0     | 0.64 | 0.63      | 0.47      |
 | Distilbert  | f1-score  | 0.55 | 0.56 | 0.77 | 0.50  | 0     | 0.64 | 0.65      | 0.50      |
-| Mini-lm     | Precision | 0    | 0    | 0.70 | 0     | 0     | 0    |           |           |
-| Mini-lm     | Recall    | 0    | 0    | 0.70 | 0     | 0     | 0    |           |           |
-| Mini-lm     | f1-score  | 0    | 0    | 0.70 | 0     | 0     | 0    |           |           |
+| Mini-lm     | Precision | 0.48 | 0.82 | 0.86 | 1.00  | 0     | 0.60 | 0.71      | 0.63      |
+| Mini-lm     | Recall    | 0.42 | 0.51 | 0.69 | 0.33  | 0     | 0.55 | 0.54      | 0.42      |
+| Mini-lm     | f1-score  | 0.45 | 0.63 | 0.76 | 0.50  | 0     | 0.57 | 0.62      | 0.48      |
 | xlm-roberta | Precision | 0    | 0    | 0.70 | 0     | 0     | 0    |           |           |
 | xlm-roberta | Recall    | 0    | 0    | 0.70 | 0     | 0     | 0    |           |           |
 | xlm-roberta | f1-score  | 0    | 0    | 0.70 | 0     | 0     | 0    |           |           |
