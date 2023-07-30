@@ -44,9 +44,9 @@ In Studying *Argument Mining, following result are achieved:
 | Mini-lm     | Precision | 0.70    | 0.62       | 0.91    | 0.85      | 0.74      |
 | Mini-lm     | Recall    | 0.74    | 0.75       | 0.88    | 0.84      | 0.79      |
 | Mini-lm     | f1-score  | 0.72    | 0.68       | 0.90    | 0.85      | 0.76      |
-| xlm-roberta | Precision | 0.70    | 0.70       | 0       |           |           |
-| xlm-roberta | Recall    | 0.70    | 0.70       | 0       |           |           |
-| xlm-roberta | f1-score  | 0.70    | 0.70       | 0       |           |           |
+| xlm-roberta | Precision | 0.63    | 0.00       | 0.90    | 0.82      | 0.51      |
+| xlm-roberta | Recall    | 0.68    | 0.00       | 0.85    | 0.79      | 0.51      |
+| xlm-roberta | f1-score  | 0.65    | 0.00       | 0.87    | 0.81      | 0.51      |
 
 
 2. Argument Classification(AC)
@@ -59,9 +59,9 @@ In Studying *Argument Mining, following result are achieved:
 | Mini-lm     | Precision | 0.98    | 0.81       | 0.97      | 0.90      |
 | Mini-lm     | Recall    | 0.99    | 0.65       | 0.97      | 0.90      |
 | Mini-lm     | f1-score  | 0.99    | 0.72       | 0.97      | 0.85      |
-| xlm-roberta | Precision | 0.70    | 0.70       |           |           |
-| xlm-roberta | Recall    | 0.70    | 0.70       |           |           |
-| xlm-roberta | f1-score  | 0.70    | 0.70       |           |           |
+| xlm-roberta | Precision | 1.00    | 0.57       | 0.96      | 0.78      |
+| xlm-roberta | Recall    | 0.96    | 0.92       | 0.95      | 0.94      |
+| xlm-roberta | f1-score  | 0.98    | 0.71       | 0.96      | 0.84      |
 
 
 3. Type Classification(TC)
@@ -74,9 +74,9 @@ In Studying *Argument Mining, following result are achieved:
 | Mini-lm     | Precision | 0.83  | 0.90  | 0.85      | 0.87      |
 | Mini-lm     | Recall    | 0.95  | 0.71  | 0.85      | 0.83      |
 | Mini-lm     | f1-score  | 0.80  | 0.89  | 0.85      | 0.84      |
-| xlm-roberta | Precision | 0.70  | 0.70  |           |           |
-| xlm-roberta | Recall    | 0.70  | 0.70  |           |           |
-| xlm-roberta | f1-score  | 0.70  | 0.70  |           |           |
+| xlm-roberta | Precision | 0.79  | 0.67  | 0.74      | 0.73      |
+| xlm-roberta | Recall    | 0.68  | 0.76  | 0.73      | 0.72      |
+| xlm-roberta | f1-score  | 0.67  | 0.78  | 0.73      | 0.72      |
 
 
 
@@ -90,8 +90,8 @@ In Studying *Argument Mining, following result are achieved:
 | Mini-lm     | Precision | 0.48 | 0.82 | 0.86 | 1.00  | 0     | 0.60 | 0.71      | 0.63      |
 | Mini-lm     | Recall    | 0.42 | 0.51 | 0.69 | 0.33  | 0     | 0.55 | 0.54      | 0.42      |
 | Mini-lm     | f1-score  | 0.45 | 0.63 | 0.76 | 0.50  | 0     | 0.57 | 0.62      | 0.48      |
-| xlm-roberta | Precision | 0    | 0    | 0.70 | 0     | 0     | 0    |           |           |
-| xlm-roberta | Recall    | 0    | 0    | 0.70 | 0     | 0     | 0    |           |           |
-| xlm-roberta | f1-score  | 0    | 0    | 0.70 | 0     | 0     | 0    |           |           |
+| xlm-roberta | Precision | 0    | 0    | 0.72 | 0     | 0     | 0    | 0.72      | 0.12      |
+| xlm-roberta | Recall    | 0    | 0    | 0.71 | 0     | 0     | 0    | 0.27      | 0.12      |
+| xlm-roberta | f1-score  | 0    | 0    | 0.72 | 0     | 0     | 0    | 0.39      | 0.12      |
 
 
