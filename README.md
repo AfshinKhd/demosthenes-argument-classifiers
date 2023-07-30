@@ -28,7 +28,7 @@ To get started with project, follow these simple steps:
    pip install -r requirment.txt
 2. **Run the Project:**
 
-To run the project, use the train_net.py script and specify the configuration file using the --config-file flag. For example:
+   To run the project, use the train_net.py script and specify the configuration file using the --config-file flag. For example:
    ```bash
    python train_net.py --config-file distilbert.yaml
 
