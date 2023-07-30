@@ -33,7 +33,7 @@ To get started with project, follow these simple steps:
    python train_net.py --config-file distilbert.yaml
 
 ## Evaluation Result
-In Studying *Argument Mining, following result are achieved:
+In Studying *Argument Mining*, following result are achieved:
 1. Argument Detection(AD)
 
 | Model       | Metric    | Premise | Conclusion | Neither | micro avg | macro avg |
