@@ -22,7 +22,7 @@ To get started with project, follow these simple steps:
 
 1. **Install Requirements:**
 
-   Make sure you have set up a virtual environment and activate it. Then, install the project dependencies listed in the `requirment.txt` file using the following command:
+   Make sure you have set up a virtual environment and activate it. Then, install the project dependencies listed in the `requirments.txt` file using the following command:
 
    ```bash
    pip install -r requirment.txt
