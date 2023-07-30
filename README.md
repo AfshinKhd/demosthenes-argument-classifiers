@@ -84,14 +84,14 @@ In Studying *Argument Mining*, following result are achieved:
 
 | Model       | Metric    | Rule | Itpr | Prec | Class | Princ | Aut  | micro avg | macro avg |
 |-------------|-----------|------|------|------|-------|-------|------|-----------|-----------|
-| Distilbert  | Precision | 0.57 | 0.87 | 0.67 | 1.00  | 0     | 0.64 | 0.67      | 0.62      |
-| Distilbert  | Recall    | 0.54 | 0.41 | 0.90 | 0.33  | 0     | 0.64 | 0.63      | 0.47      |
-| Distilbert  | f1-score  | 0.55 | 0.56 | 0.77 | 0.50  | 0     | 0.64 | 0.65      | 0.50      |
-| Mini-lm     | Precision | 0.48 | 0.82 | 0.86 | 1.00  | 0     | 0.60 | 0.71      | 0.63      |
-| Mini-lm     | Recall    | 0.42 | 0.51 | 0.69 | 0.33  | 0     | 0.55 | 0.54      | 0.42      |
-| Mini-lm     | f1-score  | 0.45 | 0.63 | 0.76 | 0.50  | 0     | 0.57 | 0.62      | 0.48      |
-| xlm-roberta | Precision | 0    | 0    | 0.72 | 0     | 0     | 0    | 0.72      | 0.12      |
-| xlm-roberta | Recall    | 0    | 0    | 0.71 | 0     | 0     | 0    | 0.27      | 0.12      |
-| xlm-roberta | f1-score  | 0    | 0    | 0.72 | 0     | 0     | 0    | 0.39      | 0.12      |
+| Distilbert  | Precision | 0.57 | 0.87 | 0.67 | 1.00  | 0.00  | 0.64 | 0.67      | 0.62      |
+| Distilbert  | Recall    | 0.54 | 0.41 | 0.90 | 0.33  | 0.00  | 0.64 | 0.63      | 0.47      |
+| Distilbert  | f1-score  | 0.55 | 0.56 | 0.77 | 0.50  | 0.00  | 0.64 | 0.65      | 0.50      |
+| Mini-lm     | Precision | 0.48 | 0.82 | 0.86 | 1.00  | 0.00  | 0.60 | 0.71      | 0.63      |
+| Mini-lm     | Recall    | 0.42 | 0.51 | 0.69 | 0.33  | 0.00  | 0.55 | 0.54      | 0.42      |
+| Mini-lm     | f1-score  | 0.45 | 0.63 | 0.76 | 0.50  | 0.00  | 0.57 | 0.62      | 0.48      |
+| xlm-roberta | Precision | 0.00 | 0.00 | 0.72 | 0.00  | 0.00  | 0.00 | 0.72      | 0.12      |
+| xlm-roberta | Recall    | 0.00 | 0.00 | 0.71 | 0.00  | 0.00  | 0.00 | 0.27      | 0.12      |
+| xlm-roberta | f1-score  | 0.00 | 0.00 | 0.72 | 0.00  | 0.00  | 0.00 | 0.39      | 0.12      |
 
 
