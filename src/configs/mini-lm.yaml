@@ -21,3 +21,8 @@ test_params:
   batch_size: 4
   shuffle: True
   num_workers: 0
+
+
+pre_processing:
+  synonym_fold: 0
+  deletion_fold: 0

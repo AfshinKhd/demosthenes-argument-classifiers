@@ -1,5 +1,6 @@
 import yaml
 
+
 def load_conf(path) -> dict:
     try:
         with open(path, "r") as f:
@@ -9,6 +10,11 @@ def load_conf(path) -> dict:
     except Exception as err:
         print(f"Unexpected {err=}, {type(err)=}")
     return conf
+
+
+
+
+    
 
 
     

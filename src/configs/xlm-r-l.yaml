@@ -23,3 +23,6 @@ test_params:
   num_workers: 0
                     
 
+pre_processing:
+  synonym_fold: 1
+  deletion_fold: 1

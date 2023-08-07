@@ -1,4 +1,10 @@
 import pandas as pd
+import nltk
+from  nltk.corpus import wordnet
+import torch
+import random
+
+nltk.download('wordnet')
 
 class CfgMaper(dict):
 
@@ -66,7 +72,6 @@ def prepare_AC_label(label):
    # label == conc
    else :
        return [0,1] 
-
    
 def prepare_TC_label(label):
    if label == 'L':
@@ -75,13 +80,6 @@ def prepare_TC_label(label):
    else:
        return [0,1] 
 
-# def prepare_SC_label(label):
-#     res = [0,0,0,0,0,0]
-#     print("type: ", type(label))
-#     for l in label:
-#         res = _SC_label(res, l)
-#     return res
-   
 def prepare_SC_label(l):
    res = [0,0,0,0,0,0]
    if l == 'Rule':
@@ -104,3 +102,36 @@ def prepare_SC_label(l):
        res[5] = 1
        return res
 
+def augment_data_synonym(text):
+    words = text.split()  
+    augmented_words = []
+
+    for word in words:
+        if len(word) > 2 and wordnet.synsets(word):
+            # probablity of finding the synonyms considered .2
+            if torch.rand(1).item() < 0.2:  
+                synonyms = wordnet.synsets(word)
+                synonym = synonyms[torch.randint(len(synonyms), (1,)).item()].lemmas()[0].name()
+                augmented_words.append(synonym)
+            else:
+                augmented_words.append(word)
+        else:
+            augmented_words.append(word)
+
+    augmented_text = ' '.join(augmented_words)
+    return augmented_text
+
+def augment_data_deletion(text):
+    # only .2 all the texts used for deletion
+    if torch.rand(1).item() < 0.2: 
+        augmented_text = random_deletion(text)  
+    else:
+        augmented_text = text
+
+    return augmented_text
+
+def random_deletion(text, p=0.2):
+    words = text.split()
+    remaining_words = [word for word in words if random.uniform(0, 1) > p]
+    augmented_text = ' '.join(remaining_words)
+    return augmented_text

@@ -9,7 +9,7 @@ MODEL:
   train_batch_size: 4
   valid_batch_size: 4
   learning_rate: 1.0e-05
-  epochs: 1  
+  epochs: 3
 
 train_params:
   batch_size: 4
@@ -22,3 +22,7 @@ test_params:
   shuffle: True
   num_workers: 0
                     
+
+pre_processing:
+  synonym_fold: 1
+  deletion_fold: 1

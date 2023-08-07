@@ -31,6 +31,9 @@ class AMClassifier(torch.nn.Module):
         self.valid_batch_size = cfg.MODEL.valid_batch_size
         self.learning_rate = cfg.MODEL.learning_rate
         self.num_pre_output = cfg.MODEL.num_pre_output
+
+        # Pre-process config
+        self.pre_process_params = cfg.pre_processing
         
         if cfg.MODEL.name == 'distilbert':
             self.tokenizer = DistilBertTokenizer.from_pretrained(cfg.MODEL.model_id, truncation=True, do_lower_case=True)
