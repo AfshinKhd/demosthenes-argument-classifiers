@@ -241,7 +241,10 @@ def main(config_file):
         outputs.append(trainer.get_output())
     
     # Save outputs in order to analyze the data
-    dataset_util.save_output_data(outputs, cfg.base_path +'\src\outputs'+ cfg.MODEL.name)
+    try:
+        dataset_util.save_output_data(outputs, cfg.base_path +'\src\outputs'+ cfg.MODEL.name)
+    except RuntimeError as e:
+        print(e)
 
     
 
