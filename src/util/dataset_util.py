@@ -5,6 +5,7 @@ import torch
 import random
 
 nltk.download('wordnet')
+import pickle
 
 class CfgMaper(dict):
 
@@ -135,3 +136,18 @@ def random_deletion(text, p=0.2):
     remaining_words = [word for word in words if random.uniform(0, 1) > p]
     augmented_text = ' '.join(remaining_words)
     return augmented_text
+
+
+def build_output(outputs, targets, task_name, texts):
+    return({'task_id':task_name, 'predicted':outputs, 'targets':targets, 'texts':texts})
+
+
+
+def save_output_data(data, path):
+    with open(path, "wb") as file:
+        pickle.dump(data, file)
+
+def read_output_data(file_name):
+    with open(file_name, "rb") as file:
+        loaded_data = pickle.load(file)
+    return loaded_data

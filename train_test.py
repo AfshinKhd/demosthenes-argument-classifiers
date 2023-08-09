@@ -23,6 +23,10 @@ class Trainer():
     def __init__(self, cfg, task) :
         super(Trainer, self).__init__() 
 
+        # read data
+        self.df_sentences = pd.read_pickle(cfg.base_path + "\df_sentences.pkl")
+        self.df_annotations = pd.read_pickle(cfg.base_path + "\df_annotations.pkl")
+
         self.current_task = task
         logger = logging.getLogger("Trainer")
         logger.info("Run ...")
@@ -39,6 +43,10 @@ class Trainer():
         print(report)
 
         self.plot_losses(model.epochs, train_losses)
+
+
+    def get_output(self):
+        return dataset_util.build_output(self.final_output, self.targets, self.current_task, self.new_df)
 
     def build_model(self, cfg, num_outputs):
 
@@ -88,21 +96,17 @@ class Trainer():
     
 
     def build_training_loader(self, model):
-        # read data
-        base_path = os.getcwd() 
-        df_sentences = pd.read_pickle(base_path + "\df_sentences.pkl")
-        df_annotations = pd.read_pickle(base_path + "\df_annotations.pkl")
-
+   
         # Pre-processing data and data domain
-        new_df = self.pre_process_data(df_sentences, df_annotations, self.current_task.name, **model.pre_process_params)
+        self.new_df = self.pre_process_data(self.df_sentences, self.df_annotations, self.current_task.name, **model.pre_process_params)
 
         # Creating the dataset and dataloader 
         train_size = model.train_size
-        self.train_data=new_df.sample(frac=train_size,random_state=model.random_state)
-        self.test_data=new_df.drop(self.train_data.index).reset_index(drop=True)
+        self.train_data=self.new_df.sample(frac=train_size,random_state=model.random_state)
+        self.test_data=self.new_df.drop(self.train_data.index).reset_index(drop=True)
         self.train_data = self.train_data.reset_index(drop=True)
 
-        print("FULL Dataset: {}".format(new_df.shape))
+        print("FULL Dataset: {}".format(self.new_df.shape))
         print("TRAIN Dataset: {}".format(self.train_data.shape))
         print("TEST Dataset: {}".format(self.test_data.shape))
 
@@ -169,7 +173,6 @@ class Trainer():
         outputs, targets = self._test(model, testing_loader)
 
         final_outputs = (np.array(outputs) >= 0.5).astype(int)
-        #final_outputs = temp_outputs.astype(int)
         #print("output: " , final_outputs[:10])
         #print("target: ", targets[:10])
         return final_outputs, targets
@@ -211,6 +214,8 @@ def setup(config_file):
     model_path = os.path.join(configs_folder, config_file)
 
 
+
+
     # tasks = [CfgMaper({'name':'AD', 'labels':['premise','conclusion','neither']}),
     #          CfgMaper({'name':'AC', 'labels':['premise','conclusion']}),
     #          CfgMaper({'name':'TC', 'labels':['L','F']}),
@@ -222,17 +227,21 @@ def setup(config_file):
     default_cfg = CfgMaper({'device':device , 'tasks':tasks, 'random_state':random_state ,'base_path':base_path })
                     
     cfg = default_cfg.merge_file(util.load_conf(model_path))
-    print(cfg)
+    #print(cfg)
    
     return cfg
 
 
 def main(config_file):
     cfg = setup(config_file)
-
+    outputs = []
     for task in cfg.tasks:
         print("Start running ",task)
         trainer = Trainer(cfg, task)
+        outputs.append(trainer.get_output())
+    
+    # Save outputs in order to analyze the data
+    dataset_util.save_output_data(outputs, cfg.base_path +'\src\outputs'+ cfg.MODEL.name)
 
     
 
